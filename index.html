@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Roblox-опросы</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #7a7a7a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+.card {
+    width: 360px;
+    padding: 30px;
+    background: #9a9a9a;
+    border-radius: 12px;
+    text-align: center;
+    transition: opacity 0.6s ease;
+}
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-size: 15px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+button.show {
+    opacity: 1;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: none;
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+    <h1>Roblox-опросы</h1>
+    <p>Введите своё мнение</p>
+    <input id="pos" placeholder="Положительное">
+    <input id="neg" placeholder="Отрицательное">
+    <button id="btn">Продолжить</button>
+</div>
+
+<script>
+const pos = document.getElementById("pos");
+const neg = document.getElementById("neg");
+const btn = document.getElementById("btn");
+
+function check() {
+    if (pos.value.trim() && neg.value.trim()) {
+        btn.classList.add("show");
+    }
+}
+
+pos.oninput = check;
+neg.oninput = check;
+
+btn.onclick = () => {
+    document.getElementById("card").innerHTML =
+        "<h1>Анкета отправлена</h1>";
+};
+</script>
+
+</body>
+</html>
