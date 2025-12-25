@@ -1,78 +1,143 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Roblox-опросы</title>
-<style>
-body {
-    margin: 0;
-    height: 100vh;
-    background: #7a7a7a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-}
-.card {
-    width: 360px;
-    padding: 30px;
-    background: #9a9a9a;
-    border-radius: 12px;
-    text-align: center;
-    transition: opacity 0.6s ease;
-}
-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    font-size: 15px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-button.show {
-    opacity: 1;
-}
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    border: none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Roblox-опросы</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #bdbdbd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 360px;
+      background: #d6d6d6;
+      border-radius: 14px;
+      padding: 30px 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: all 0.6s ease;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      margin: 10px 0 25px;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+
+    button.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  </style>
 </head>
 <body>
 
-<div class="card" id="card">
+  <div class="card" id="card">
     <h1>Roblox-опросы</h1>
-    <p>Введите своё мнение</p>
+    <div class="subtitle">Введите своё мнение</div>
+
     <input id="pos" placeholder="Положительное">
     <input id="neg" placeholder="Отрицательное">
+
     <button id="btn">Продолжить</button>
-</div>
+  </div>
 
-<script>
-const pos = document.getElementById("pos");
-const neg = document.getElementById("neg");
-const btn = document.getElementById("btn");
+  <script>
+    const pos = document.getElementById("pos");
+    const neg = document.getElementById("neg");
+    const btn = document.getElementById("btn");
+    const card = document.getElementById("card");
 
-function check() {
-    if (pos.value.trim() && neg.value.trim()) {
+    function checkInputs() {
+      if (pos.value.trim() && neg.value.trim()) {
         btn.classList.add("show");
+      }
     }
-}
 
-pos.oninput = check;
-neg.oninput = check;
+    pos.addEventListener("input", checkInputs);
+    neg.addEventListener("input", checkInputs);
 
-btn.onclick = () => {
-    document.getElementById("card").innerHTML =
-        "<h1>Анкета отправлена</h1>";
-};
-</script>
+    btn.onclick = async () => {
+      btn.disabled = true;
+      btn.textContent = "Отправка...";
+
+      await fetch("https://api.github.com/repos/hagared/roblox-survey/dispatches", {
+        method: "POST",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": "Bearer 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",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          event_type: "survey",
+          client_payload: {
+            positive: pos.value,
+            negative: neg.value
+          }
+        })
+      });
+
+      card.classList.add("fade-out");
+
+      setTimeout(() => {
+        card.innerHTML = "<h1>Анкета отправлена</h1>";
+        card.classList.remove("fade-out");
+      }, 600);
+    };
+  </script>
 
 </body>
 </html>
