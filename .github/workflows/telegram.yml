@@ -1,7 +1,8 @@
 name: Send survey to Telegram
 
 on:
-  workflow_dispatch:
+  repository_dispatch:
+    types: [survey]
 
 jobs:
   send:
