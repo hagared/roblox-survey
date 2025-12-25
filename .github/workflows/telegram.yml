@@ -8,8 +8,9 @@ jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: Send message
+      - name: Send message to Telegram
         run: |
+          TEXT="📝 Новый опрос: Roblox\n\n➕ Положительное:\n${{ github.event.client_payload.positive }}\n\n➖ Отрицательное:\n${{ github.event.client_payload.negative }}"
           curl -X POST "https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendMessage" \
-          -d chat_id=${{ secrets.TG_CHAT }} \
-          -d text="🧪 ТЕСТОВОЕ СООБЩЕНИЕ. GitHub Actions работает."
+            -d chat_id=${{ secrets.TG_CHAT }} \
+            --data-urlencode text="$TEXT"
